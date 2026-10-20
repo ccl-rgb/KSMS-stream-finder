@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stream & Career Predictor for Grades 8–10</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar and animations */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-radio:checked + label {
+      border-color: #2563eb;
+      background-color: #eff6ff;
+      color: #1e3a8a;
+    }
+    .custom-checkbox:checked + label {
+      border-color: #2563eb;
+      background-color: #eff6ff;
+      color: #1e3a8a;
+    }
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printArea, #printArea * {
+        visibility: visible;
+      }
+      #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen p-2 sm:p-4">
+
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 my-2 sm:my-6">
+    
+    <!-- HEADER -->
+    <!--header class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-6 sm:p-8 text-center relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+        <i class="fa-solid fa-compass fa-10x"></i>
+      </div>
+      <div class="relative z-10">
+        <span class="inline-block bg-blue-500/30 text-blue-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-2 border border-blue-400/30">
+          Grade 8–10 Decision Hub
+        </span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Stream & Career Predictor</h1>
+        <p class="mt-2 text-blue-100 text-sm sm:text-base max-w-xl mx-auto">
+          Answer a few questions about your interests, learning style, and goals to discover your ideal high school stream and future careers.
+        </p>
+      </div>
+    </header-->
+
+    <!-- STEP PROGRESS BAR -->
+    <div id="progressBarContainer" class="bg-slate-100 border-b border-slate-200 p-4">
+      <div class="flex justify-between text-xs font-semibold text-slate-500 mb-2 px-1">
+        <span id="stepIndicator">Step 1 of 5</span>
+        <span id="progressPercent">20% Complete</span>
+      </div>
+      <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 20%"></div>
+      </div>
+    </div>
+
+    <!-- MAIN FORM / WIZARD CONTENT -->
+    <div class="p-6 sm:p-8">
+      
+      <!-- FORM START -->
+      <form id="assessmentForm" onsubmit="return false;">
+        
+        <!-- STEP 1: SUBJECT INTERESTS -->
+        <div class="wizard-step fade-in" id="step1">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <span class="bg-blue-100 text-blue-700 w-8 h-8 rounded-full inline-flex items-center justify-center text-sm font-bold">1</span>
+              Subject Interests
+            </h2>
+            <p class="text-slate-600 text-sm mt-1">Select 2 to 4 subject areas you genuinely enjoy studying or exploring.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <input type="checkbox" id="subj_math" name="subjects" value="math" class="hidden custom-checkbox" onchange="validateStep(1)">
+              <label for="subj_math" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-calculator text-blue-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Mathematics & Logic</div>
+                  <div class="text-xs text-slate-500 mt-1">Algebra, geometry, formulas, problem solving & puzzle solving.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="subj_physics" name="subjects" value="physics" class="hidden custom-checkbox" onchange="validateStep(1)">
+              <label for="subj_physics" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-atom text-indigo-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Physics & Mechanics</div>
+                  <div class="text-xs text-slate-500 mt-1">Understanding laws of motion, tech, robotics & how machines work.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="subj_bio" name="subjects" value="biology" class="hidden custom-checkbox" onchange="validateStep(1)">
+              <label for="subj_bio" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-dna text-emerald-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Biology & Life Sciences</div>
+                  <div class="text-xs text-slate-500 mt-1">Human anatomy, plants, medical science, ecosystems & living organisms.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="subj_biz" name="subjects" value="business" class="hidden custom-checkbox" onchange="validateStep(1)">
+              <label for="subj_biz" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-chart-line text-green-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Business, Finance & Economics</div>
+                  <div class="text-xs text-slate-500 mt-1">Money management, stock markets, trade, startups & company operations.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="subj_hist" name="subjects" value="history" class="hidden custom-checkbox" onchange="validateStep(1)">
+              <label for="subj_hist" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-landmark text-amber-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">History, Civics & Governance</div>
+                  <div class="text-xs text-slate-500 mt-1">World events, legal systems, constitution, politics & society.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="subj_art" name="subjects" value="art_psych" class="hidden custom-checkbox" onchange="validateStep(1)">
+              <label for="subj_art" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-palette text-purple-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Arts, Psychology & Media</div>
+                  <div class="text-xs text-slate-500 mt-1">Human behavior, creative design, writing, journalism & visual arts.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <p id="step1-error" class="text-red-500 text-xs mt-3 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Please select at least 1 subject interest to continue.</p>
+        </div>
+
+        <!-- STEP 2: LEARNING STYLE & ACTIVITIES -->
+        <div class="wizard-step hidden fade-in" id="step2">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <span class="bg-blue-100 text-blue-700 w-8 h-8 rounded-full inline-flex items-center justify-center text-sm font-bold">2</span>
+              Favorite Learning Style & Activities
+            </h2>
+            <p class="text-slate-600 text-sm mt-1">Which activity sounds most exciting to you during a school project?</p>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <input type="radio" id="style_experiment" name="learning_style" value="experimenting" class="hidden custom-radio" onchange="validateStep(2)">
+              <label for="style_experiment" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-vial text-blue-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Experimenting, Technical Problem-Solving & Building</div>
+                  <div class="text-xs text-slate-500 mt-0.5">Coding, conducting lab experiments, repairing gadgets, building models.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="style_money" name="learning_style" value="money_logic" class="hidden custom-radio" onchange="validateStep(2)">
+              <label for="style_money" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-coins text-green-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Analyzing Money, Market Trends & Strategy</div>
+                  <div class="text-xs text-slate-500 mt-0.5">Calculating profit/loss, planning budget, pitching product ideas, market research.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="style_writing" name="learning_style" value="writing_creative" class="hidden custom-radio" onchange="validateStep(2)">
+              <label for="style_writing" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-pen-nib text-purple-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Writing, Storytelling & Creative Expression</div>
+                  <div class="text-xs text-slate-500 mt-0.5">Designing graphics, drafting articles, digital video editing, creative writing.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="style_social" name="learning_style" value="social_human" class="hidden custom-radio" onchange="validateStep(2)">
+              <label for="style_social" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-people-group text-amber-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Debating, Human Psychology & Analyzing Society</div>
+                  <div class="text-xs text-slate-500 mt-0.5">Discussing social issues, counseling friends, analyzing historical events, law & policy debates.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <p id="step2-error" class="text-red-500 text-xs mt-3 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Please select a learning style to proceed.</p>
+        </div>
+
+        <!-- STEP 3: WORK ENVIRONMENT -->
+        <div class="wizard-step hidden fade-in" id="step3">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <span class="bg-blue-100 text-blue-700 w-8 h-8 rounded-full inline-flex items-center justify-center text-sm font-bold">3</span>
+              Work Environment Preference
+            </h2>
+            <p class="text-slate-600 text-sm mt-1">Where do you visualize yourself working 8–10 years from now?</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <input type="radio" id="env_lab" name="environment" value="labs_tech" class="hidden custom-radio" onchange="validateStep(3)">
+              <label for="env_lab" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-microscope text-blue-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Tech Labs, Hospitals or R&D Facilities</div>
+                  <div class="text-xs text-slate-500 mt-1">Engineering firms, software companies, medical centers, scientific research facilities.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="env_corp" name="environment" value="corporate_markets" class="hidden custom-radio" onchange="validateStep(3)">
+              <label for="env_corp" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-building text-emerald-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Corporate Offices, Banks & Financial Markets</div>
+                  <div class="text-xs text-slate-500 mt-1">Consulting firms, banking institutions, corporate offices, startup management hubs.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="env_studio" name="environment" value="creative_studios" class="hidden custom-radio" onchange="validateStep(3)">
+              <label for="env_studio" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-wand-magic-sparkles text-purple-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Design Studios, Media Houses & Agencies</div>
+                  <div class="text-xs text-slate-500 mt-1">UI/UX studios, newsrooms, advertising firms, gaming studios, counseling centers.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="env_public" name="environment" value="public_legal" class="hidden custom-radio" onchange="validateStep(3)">
+              <label for="env_public" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-scale-balanced text-amber-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Law Courts, Public Administration & NGOs</div>
+                  <div class="text-xs text-slate-500 mt-1">Civil administration offices, legal firms, courtrooms, international policy organizations.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <p id="step3-error" class="text-red-500 text-xs mt-3 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Please select a work environment preference.</p>
+        </div>
+
+        <!-- STEP 4: MATH COMFORT -->
+        <div class="wizard-step hidden fade-in" id="step4">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <span class="bg-blue-100 text-blue-700 w-8 h-8 rounded-full inline-flex items-center justify-center text-sm font-bold">4</span>
+              Mathematics Comfort Level
+            </h2>
+            <p class="text-slate-600 text-sm mt-1">How do you honestly feel when dealing with complex mathematical concepts?</p>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <input type="radio" id="math_high" name="math_level" value="high" class="hidden custom-radio" onchange="validateStep(4)">
+              <label for="math_high" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-square-root-variable text-blue-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">High / Advanced Comfort</div>
+                  <div class="text-xs text-slate-500 mt-0.5">I enjoy solving complex algebra, trigonometry, and challenging numerical problems.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="math_moderate" name="math_level" value="moderate" class="hidden custom-radio" onchange="validateStep(4)">
+              <label for="math_moderate" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-percent text-emerald-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Practical & Applied Comfort</div>
+                  <div class="text-xs text-slate-500 mt-0.5">I am good with statistics, practical arithmetic, and finance logic, but prefer to avoid heavy abstract calculus.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="radio" id="math_basic" name="math_level" value="basic" class="hidden custom-radio" onchange="validateStep(4)">
+              <label for="math_basic" class="flex items-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all">
+                <i class="fa-solid fa-book-open text-amber-600 text-xl mr-4"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Basic / Prefer Minimal Math</div>
+                  <div class="text-xs text-slate-500 mt-0.5">I prefer subject areas focused on descriptive writing, reading, biology, or conceptual analysis over calculations.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <p id="step4-error" class="text-red-500 text-xs mt-3 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Please select your math comfort level.</p>
+        </div>
+
+        <!-- STEP 5: KEY SKILL STRENGTHS -->
+        <div class="wizard-step hidden fade-in" id="step5">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <span class="bg-blue-100 text-blue-700 w-8 h-8 rounded-full inline-flex items-center justify-center text-sm font-bold">5</span>
+              Key Skill Strengths
+            </h2>
+            <p class="text-slate-600 text-sm mt-1">Select up to 2 skills that friends or teachers say you excel at.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <input type="checkbox" id="skill_logic" name="skills" value="logical_reasoning" class="hidden custom-checkbox" onchange="validateStep(5)">
+              <label for="skill_logic" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-brain text-blue-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Logical Reasoning & Systemic Thinking</div>
+                  <div class="text-xs text-slate-500 mt-1">Breaking down complex problems into logical steps.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="skill_num" name="skills" value="numerical_ability" class="hidden custom-checkbox" onchange="validateStep(5)">
+              <label for="skill_num" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-arrow-trend-up text-green-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Numerical Ability & Data Handling</div>
+                  <div class="text-xs text-slate-500 mt-1">Quick mental arithmetic, reading graphs, budget management.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="skill_verbal" name="skills" value="verbal_creative" class="hidden custom-checkbox" onchange="validateStep(5)">
+              <label for="skill_verbal" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-comments text-purple-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Verbal Fluency & Creative Writing</div>
+                  <div class="text-xs text-slate-500 mt-1">Expressing ideas smoothly in writing or speeches.</div>
+                </div>
+              </label>
+            </div>
+
+            <div>
+              <input type="checkbox" id="skill_research" name="skills" value="analytical_reading" class="hidden custom-checkbox" onchange="validateStep(5)">
+              <label for="skill_research" class="flex items-start p-4 border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition-all h-full">
+                <i class="fa-solid fa-magnifying-glass-chart text-amber-600 text-xl mr-3 mt-1"></i>
+                <div>
+                  <div class="font-semibold text-slate-800">Analytical Reading & Social Research</div>
+                  <div class="text-xs text-slate-500 mt-1">Reading long passages, understanding human motivations & law.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <p id="step5-error" class="text-red-500 text-xs mt-3 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> Please select at least 1 key strength skill.</p>
+        </div>
+
+        <!-- NAVIGATION BUTTONS -->
+        <div class="flex justify-between items-center mt-8 pt-4 border-t border-slate-200" id="wizardControls">
+          <button type="button" id="prevBtn" onclick="navigateStep(-1)" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-600 text-sm font-semibold hover:bg-slate-100 transition hidden">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Previous
+          </button>
+          <div></div> <!-- Spacer -->
+          <button type="button" id="nextBtn" onclick="navigateStep(1)" class="px-6 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition shadow-md shadow-blue-500/20">
+            Next <i class="fa-solid fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+
+      </form>
+
+      <!-- RESULTS DASHBOARD (Hidden Initially) -->
+      <div id="resultsDashboard" class="hidden fade-in">
+        
+        <div id="printArea">
+          
+          <!-- SUMMARY BADGE -->
+          <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  Top Recommended Path
+                </span>
+                <h2 id="topStreamTitle" class="text-2xl sm:text-3xl font-extrabold text-blue-950 mt-2">
+                  Science (PCM) Stream
+                </h2>
+                <p id="topStreamSub" class="text-slate-600 text-sm mt-1">
+                  Based on your strong affinity for physics, mathematics, and technical problem-solving.
+                </p>
+              </div>
+              <div class="bg-white px-5 py-3 rounded-xl border border-blue-100 text-center shadow-sm w-full sm:w-auto">
+                <span class="text-xs text-slate-500 font-medium block">Match Score</span>
+                <span id="topMatchScore" class="text-3xl font-black text-blue-600">92%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- STREAM BREAKDOWN SCORES -->
+          <div class="mb-8">
+            <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <i class="fa-solid fa-chart-bar text-blue-600"></i> Stream Alignment Analysis
+            </h3>
+            
+            <div class="space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
+              
+              <!-- PCM -->
+              <div>
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                  <span class="text-slate-800">Science (PCM) <span class="text-xs text-slate-500 font-normal">- Physics, Chem, Math</span></span>
+                  <span id="score_pcm_val" class="text-blue-700 font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                  <div id="score_pcm_bar" class="bg-blue-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- PCB -->
+              <div>
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                  <span class="text-slate-800">Science (PCB) <span class="text-xs text-slate-500 font-normal">- Physics, Chem, Bio</span></span>
+                  <span id="score_pcb_val" class="text-emerald-700 font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                  <div id="score_pcb_bar" class="bg-emerald-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Commerce Math -->
+              <div>
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                  <span class="text-slate-800">Commerce (with Math/Stats) <span class="text-xs text-slate-500 font-normal">- Accounts, Economics, Finance</span></span>
+                  <span id="score_comm_math_val" class="text-green-700 font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                  <div id="score_comm_math_bar" class="bg-green-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Commerce Non-Math -->
+              <div>
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                  <span class="text-slate-800">Commerce (Management / General) <span class="text-xs text-slate-500 font-normal">- Business, Marketing, Law</span></span>
+                  <span id="score_comm_nomath_val" class="text-teal-700 font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                  <div id="score_comm_nomath_bar" class="bg-teal-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Arts / Humanities -->
+              <div>
+                <div class="flex justify-between text-sm font-semibold mb-1">
+                  <span class="text-slate-800">Arts & Humanities <span class="text-xs text-slate-500 font-normal">- History, Pol. Science, Psychology, Media</span></span>
+                  <span id="score_arts_val" class="text-purple-700 font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                  <div id="score_arts_bar" class="bg-purple-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- DETAILED RECOMMENDATION & CAREERS -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            
+            <!-- CAREERS -->
+            <div class="border border-slate-200 rounded-xl p-5 bg-white">
+              <h4 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-briefcase text-blue-600"></i> Top Recommended Careers
+              </h4>
+              <ul id="recommendedCareersList" class="space-y-2 text-sm text-slate-700">
+                <!-- Dynamically Populated -->
+              </ul>
+            </div>
+
+            <!-- SUB-PATH MATRIX RECOMMENDATION -->
+            <div class="border border-slate-200 rounded-xl p-5 bg-white">
+              <h4 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-diagram-project text-indigo-600"></i> Recommended Sub-Path Focus
+              </h4>
+              <div id="subPathRecommendation" class="text-sm text-slate-600 space-y-2">
+                <!-- Dynamically Populated -->
+              </div>
+            </div>
+
+          </div>
+
+        </div> <!-- END PRINT AREA -->
+
+        <!-- ACTION BUTTONS -->
+        <div class="flex flex-wrap justify-between items-center gap-4 pt-6 border-t border-slate-200 no-print">
+          <button type="button" onclick="resetAssessment()" class="px-5 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-100 transition flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Retake Assessment
+          </button>
+          
+          <div class="flex gap-3">
+            <button type="button" onclick="copyResultsText()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-white font-semibold text-sm hover:bg-slate-900 transition flex items-center gap-2">
+              <i class="fa-regular fa-copy"></i> Copy Summary
+            </button>
+            <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition flex items-center gap-2 shadow-md shadow-blue-500/20">
+              <i class="fa-solid fa-print"></i> Print / Save PDF
+            </button>
+          </div>
+        </div>
+
+        <div id="toastMessage" class="hidden fixed bottom-4 right-4 bg-slate-900 text-white px-4 py-2 rounded-lg text-xs shadow-lg fade-in">
+          Summary copied to clipboard!
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    // Stream & Career Mapping Database
+    const streamDetails = {
+      pcm: {
+        title: "Science (PCM) Stream",
+        subtitle: "Best aligned with physics, advanced mathematics, and systematic logical analysis.",
+        careers: [
+          "Artificial Intelligence & Software Engineering",
+          "Data Science & Machine Learning",
+          "Aerospace & Mechanical Engineering",
+          "Architecture & Spatial Design",
+          "Defense Services & Technical Operations"
+        ],
+        subPath: "<strong>Sub-Path Focus:</strong> Physics + Chemistry + Mathematics + Computer Science/Informatics. Focus on JEE/Engineering or Tech degrees."
+      },
+      pcb: {
+        title: "Science (PCB) Stream",
+        subtitle: "Best aligned with life sciences, biological research, medical healthcare, and clinical studies.",
+        careers: [
+          "Medicine (MBBS, BDS, Surgery)",
+          "Biotechnology & Genetic Research",
+          "Biomedical Engineering & Devices",
+          "Clinical Psychology & Neuroscience",
+          "Pharmaceutical Sciences"
+        ],
+        subPath: "<strong>Sub-Path Focus:</strong> Physics + Chemistry + Biology + Psychology/Biotech. Focus on NEET/Medical or Clinical Life Sciences."
+      },
+      comm_math: {
+        title: "Commerce (with Math/Applied Math)",
+        subtitle: "Best aligned with financial logic, numerical analytics, market trends, and economic theories.",
+        careers: [
+          "Chartered Accountancy (CA) & Audit",
+          "Financial Analysis & Investment Banking",
+          "Actuarial Science & Risk Management",
+          "Economics Research & Data Analytics",
+          "FinTech & Quantitative Finance"
+        ],
+        subPath: "<strong>Sub-Path Focus:</strong> Accountancy + Business Studies + Economics + Applied Math. Prepares for BA Economics, CA, CFA, or Finance Honors."
+      },
+      comm_nomath: {
+        title: "Commerce (Business & Management)",
+        subtitle: "Best aligned with corporate management, marketing strategies, entrepreneurship, and commercial law.",
+        careers: [
+          "Business Administration (BBA / IPMAT)",
+          "Digital Marketing & Brand Strategy",
+          "Corporate Law & Legal Advisory",
+          "Hotel Management & Hospitality",
+          "Entrepreneurship & Startup Operations"
+        ],
+        subPath: "<strong>Sub-Path Focus:</strong> Accountancy + Business Studies + Economics + Informatics/Media. Ideal for BBA, Corporate Law, and General Business."
+      },
+      arts: {
+        title: "Arts & Humanities Stream",
+        subtitle: "Best aligned with social research, human psychology, creative communication, law, and public policy.",
+        careers: [
+          "UI/UX Design & Digital Product Design",
+          "Corporate & Criminal Law (BA LLB)",
+          "Civil Services (UPSC) & Public Policy",
+          "Clinical / Counseling Psychology",
+          "Journalism, PR & Mass Media Communications"
+        ],
+        subPath: "<strong>Sub-Path Focus:</strong> Choose either <em>Social Sciences</em> (History, Pol. Science, Law) or <em>Creative/Behavioral Path</em> (Psychology, Fine Arts, Media)."
+      }
+    };
+
+    function updateProgressBar() {
+      const percentage = Math.round((currentStep / totalSteps) * 100);
+      document.getElementById('progressBar').style.width = percentage + '%';
+      document.getElementById('stepIndicator').innerText = `Step ${currentStep} of ${totalSteps}`;
+      document.getElementById('progressPercent').innerText = `${percentage}% Complete`;
+    }
+
+    function validateStep(step) {
+      let isValid = false;
+      const errorElem = document.getElementById(`step${step}-error`);
+
+      if (step === 1) {
+        const checked = document.querySelectorAll('input[name="subjects"]:checked');
+        isValid = checked.length > 0;
+      } else if (step === 2) {
+        isValid = document.querySelector('input[name="learning_style"]:checked') !== null;
+      } else if (step === 3) {
+        isValid = document.querySelector('input[name="environment"]:checked') !== null;
+      } else if (step === 4) {
+        isValid = document.querySelector('input[name="math_level"]:checked') !== null;
+      } else if (step === 5) {
+        const checked = document.querySelectorAll('input[name="skills"]:checked');
+        isValid = checked.length > 0;
+      }
+
+      if (errorElem) {
+        if (isValid) {
+          errorElem.classList.add('hidden');
+        }
+      }
+      return isValid;
+    }
+
+    function navigateStep(direction) {
+      if (direction === 1 && !validateStep(currentStep)) {
+        document.getElementById(`step${currentStep}-error`).classList.remove('hidden');
+        return;
+      }
+
+      // Hide current step
+      document.getElementById(`step${currentStep}`).classList.add('hidden');
+
+      currentStep += direction;
+
+      if (currentStep > totalSteps) {
+        calculateResults();
+        return;
+      }
+
+      // Show new step
+      document.getElementById(`step${currentStep}`).classList.remove('hidden');
+
+      // Update Controls
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      if (currentStep === 1) {
+        prevBtn.classList.add('hidden');
+      } else {
+        prevBtn.classList.remove('hidden');
+      }
+
+      if (currentStep === totalSteps) {
+        nextBtn.innerHTML = 'Calculate Stream <i class="fa-solid fa-sparkles ml-2"></i>';
+        nextBtn.classList.replace('bg-blue-600', 'bg-indigo-600');
+        nextBtn.classList.replace('hover:bg-blue-700', 'hover:bg-indigo-700');
+      } else {
+        nextBtn.innerHTML = 'Next <i class="fa-solid fa-arrow-right ml-2"></i>';
+        nextBtn.classList.replace('bg-indigo-600', 'bg-blue-600');
+        nextBtn.classList.replace('hover:bg-indigo-700', 'hover:bg-blue-700');
+      }
+
+      updateProgressBar();
+    }
+
+    function calculateResults() {
+      // Hide form & wizard controls
+      document.getElementById('assessmentForm').classList.add('hidden');
+      document.getElementById('progressBarContainer').classList.add('hidden');
+
+      // Raw Stream Scores
+      let scores = {
+        pcm: 0,
+        pcb: 0,
+        comm_math: 0,
+        comm_nomath: 0,
+        arts: 0
+      };
+
+      // 1. Subjects
+      const selectedSubjects = Array.from(document.querySelectorAll('input[name="subjects"]:checked')).map(cb => cb.value);
+      selectedSubjects.forEach(s => {
+        if (s === 'math') { scores.pcm += 25; scores.comm_math += 20; }
+        if (s === 'physics') { scores.pcm += 30; }
+        if (s === 'biology') { scores.pcb += 35; }
+        if (s === 'business') { scores.comm_math += 20; scores.comm_nomath += 30; }
+        if (s === 'history') { scores.arts += 25; }
+        if (s === 'art_psych') { scores.arts += 30; }
+      });
+
+      // 2. Learning Style
+      const style = document.querySelector('input[name="learning_style"]:checked')?.value;
+      if (style === 'experimenting') { scores.pcm += 25; scores.pcb += 20; }
+      if (style === 'money_logic') { scores.comm_math += 25; scores.comm_nomath += 25; }
+      if (style === 'writing_creative') { scores.arts += 25; }
+      if (style === 'social_human') { scores.arts += 25; scores.pcb += 15; }
+
+      // 3. Environment
+      const env = document.querySelector('input[name="environment"]:checked')?.value;
+      if (env === 'labs_tech') { scores.pcm += 20; scores.pcb += 20; }
+      if (env === 'corporate_markets') { scores.comm_math += 20; scores.comm_nomath += 20; }
+      if (env === 'creative_studios') { scores.arts += 20; }
+      if (env === 'public_legal') { scores.arts += 20; scores.comm_nomath += 15; }
+
+      // 4. Math Comfort
+      const math = document.querySelector('input[name="math_level"]:checked')?.value;
+      if (math === 'high') { scores.pcm += 25; scores.comm_math += 20; }
+      if (math === 'moderate') { scores.comm_math += 15; scores.comm_nomath += 20; scores.pcb += 10; }
+      if (math === 'basic') { scores.arts += 20; scores.comm_nomath += 10; scores.pcb += 15; }
+
+      // 5. Skills
+      const selectedSkills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(cb => cb.value);
+      selectedSkills.forEach(sk => {
+        if (sk === 'logical_reasoning') { scores.pcm += 15; scores.comm_math += 10; }
+        if (sk === 'numerical_ability') { scores.comm_math += 15; scores.pcm += 10; }
+        if (sk === 'verbal_creative') { scores.arts += 15; }
+        if (sk === 'analytical_reading') { scores.arts += 15; scores.comm_nomath += 10; }
+      });
+
+      // Normalize Percentages (Max realistic score capped at ~100)
+      const maxPossible = 100;
+      const normalize = (val) => Math.min(Math.max(Math.round((val / maxPossible) * 100), 15), 98);
+
+      const normalizedScores = {
+        pcm: normalize(scores.pcm),
+        pcb: normalize(scores.pcb),
+        comm_math: normalize(scores.comm_math),
+        comm_nomath: normalize(scores.comm_nomath),
+        arts: normalize(scores.arts)
+      };
+
+      // Update Bar UI
+      document.getElementById('score_pcm_val').innerText = `${normalizedScores.pcm}%`;
+      document.getElementById('score_pcm_bar').style.width = `${normalizedScores.pcm}%`;
+
+      document.getElementById('score_pcb_val').innerText = `${normalizedScores.pcb}%`;
+      document.getElementById('score_pcb_bar').style.width = `${normalizedScores.pcb}%`;
+
+      document.getElementById('score_comm_math_val').innerText = `${normalizedScores.comm_math}%`;
+      document.getElementById('score_comm_math_bar').style.width = `${normalizedScores.comm_math}%`;
+
+      document.getElementById('score_comm_nomath_val').innerText = `${normalizedScores.comm_nomath}%`;
+      document.getElementById('score_comm_nomath_bar').style.width = `${normalizedScores.comm_nomath}%`;
+
+      document.getElementById('score_arts_val').innerText = `${normalizedScores.arts}%`;
+      document.getElementById('score_arts_bar').style.width = `${normalizedScores.arts}%`;
+
+      // Find Highest Stream
+      let highestKey = 'pcm';
+      let maxScore = -1;
+      Object.keys(normalizedScores).forEach(key => {
+        if (normalizedScores[key] > maxScore) {
+          maxScore = normalizedScores[key];
+          highestKey = key;
+        }
+      });
+
+      // Render Top Winner Details
+      const winner = streamDetails[highestKey];
+      document.getElementById('topStreamTitle').innerText = winner.title;
+      document.getElementById('topStreamSub').innerText = winner.subtitle;
+      document.getElementById('topMatchScore').innerText = `${maxScore}%`;
+
+      // Render Careers List
+      const careerListContainer = document.getElementById('recommendedCareersList');
+      careerListContainer.innerHTML = winner.careers.map(c => `
+        <li class="flex items-center gap-2">
+          <i class="fa-solid fa-check text-green-600"></i> ${c}
+        </li>
+      `).join('');
+
+      // Render Sub Path Info
+      document.getElementById('subPathRecommendation').innerHTML = winner.subPath;
+
+      // Unhide Results
+      document.getElementById('resultsDashboard').classList.remove('hidden');
+    }
+
+    function resetAssessment() {
+      document.getElementById('assessmentForm').reset();
+      document.getElementById('resultsDashboard').classList.add('hidden');
+      document.getElementById('assessmentForm').classList.remove('hidden');
+      document.getElementById('progressBarContainer').classList.remove('hidden');
+
+      // Reset Step State
+      document.querySelectorAll('.wizard-step').forEach((s, idx) => {
+        if (idx === 0) s.classList.remove('hidden');
+        else s.classList.add('hidden');
+      });
+
+      currentStep = 1;
+      updateProgressBar();
+
+      // Reset Next Button Text
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.innerHTML = 'Next <i class="fa-solid fa-arrow-right ml-2"></i>';
+      nextBtn.classList.replace('bg-indigo-600', 'bg-blue-600');
+      nextBtn.classList.replace('hover:bg-indigo-700', 'hover:bg-blue-700');
+      document.getElementById('prevBtn').classList.add('hidden');
+    }
+
+    function copyResultsText() {
+      const topStream = document.getElementById('topStreamTitle').innerText;
+      const matchScore = document.getElementById('topMatchScore').innerText;
+      const text = `Stream Finder Prediction Report:\nPrimary Recommended Stream: ${topStream} (${matchScore} Match)\nGenerated via Stream Finder: Grade 8-10 Decision Hub.`;
+
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = text;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+
+      const toast = document.getElementById('toastMessage');
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+  </script>
+</body>
+</html>
